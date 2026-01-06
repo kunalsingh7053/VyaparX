@@ -40,6 +40,22 @@ body('fullName.lastName')
 
 ]
 
+const loginUserValidations = [
+body('email').optional().isEmail()
+    .withMessage('Invalid email format'),
+
+body('username').optional()
+    .isString()
+    .withMessage('Username must be a string'),    
+body('password')
+    .isString()
+    .withMessage('Password must be a string')
+    .notEmpty()
+    .withMessage('Password is required'),
+    respondValidationErrors
+]
+
 module.exports = {
-    registerUserValidations
+    registerUserValidations,
+    loginUserValidations
 }; 

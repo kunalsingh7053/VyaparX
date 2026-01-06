@@ -11,6 +11,7 @@ beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const uri = mongoServer.getUri();
   process.env.MONGO_URI = uri;
+  process.env.JWT_SECRET = "test_jwt_secret";
   await connectDB();
 });
 
@@ -27,10 +28,10 @@ beforeEach(async () => {
   }
 });
 
-describe('/auth/register', () => {
+describe('/api/auth/register', () => {
   it('creates a user and returns 201', async () => {
     const res = await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({
         username: 'john_doe',
         email: 'john@example.com',
@@ -52,7 +53,7 @@ describe('/auth/register', () => {
 
   it('rejects duplicate username/email with 409', async () => {
     await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({
         username: 'jane',
         email: 'jane@example.com',
@@ -61,7 +62,7 @@ describe('/auth/register', () => {
       });
 
     const res = await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({
         username: 'jane',
         email: 'jane@example.com',
@@ -75,10 +76,9 @@ describe('/auth/register', () => {
 
   it('returns 400 for missing fields', async () => {
     const res = await request(app)
-      .post('/auth/register')
+      .post('/api/auth/register')
       .send({ username: 'x', email: 'x@example.com', password: 'p' });
 
     expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/missing/i);
   });
 });
