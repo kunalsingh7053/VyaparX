@@ -12,4 +12,11 @@ router.post('/login',validators.loginUserValidations,authController.loginUser);
 router.get('/me',authMiddleware.authMiddleware,authController.getCurrentUser);
 router.get('/logout',authController.logoutUser);
 
+
+
+router.get('/me/addresses',authMiddleware.authMiddleware,authController.getUserAddresses);
+router.post('/me/addresses',validators.addUserAddressValidations,authMiddleware.authMiddleware,authController.addUserAddress);
+router.delete('/me/addresses/:addressId',authMiddleware.authMiddleware,authController.deleteUserAddress);
+
+
 module.exports = router;

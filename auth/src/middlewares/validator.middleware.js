@@ -1,4 +1,5 @@
 const{body,validationResult} = require('express-validator');
+const { addUserAddress } = require('../controllers/auth.controller');
 
 const respondValidationErrors = (req,res,next)=>{
 const errors = validationResult(req);
@@ -36,6 +37,10 @@ body('fullName.lastName')
     .withMessage('Last name must be a string')
     .notEmpty()
     .withMessage('Last name is required'),
+body('role')
+    .optional()
+    .isIn(['user','seller'])
+    .withMessage('Role must be either user or admin'),
     respondValidationErrors
 
 ]
@@ -55,7 +60,48 @@ body('password')
     respondValidationErrors
 ]
 
+
+const addUserAddressValidations = [
+body('street')
+    .isString()
+    .withMessage('Street must be a string')
+    .notEmpty()
+    .withMessage('Street is required'),
+
+body('city')
+.isString()
+.withMessage('City must be a string')
+.notEmpty()
+.withMessage('City is required'),
+
+body('state')
+.isString()
+.withMessage('State must be a string')
+.notEmpty()
+.withMessage('State is required'),
+
+body('pincode')
+.isNumeric() 
+.withMessage('Zip code must be numeric'),
+
+body('country')
+.isString()
+.withMessage('Country must be a string')
+.notEmpty()
+.withMessage('Country is required'),
+
+body('isDefault')
+.optional()
+.isBoolean()
+.withMessage('isDefault must be a boolean'),
+
+respondValidationErrors
+
+
+]
+
 module.exports = {
     registerUserValidations,
-    loginUserValidations
+    loginUserValidations,
+    addUserAddressValidations
 }; 
