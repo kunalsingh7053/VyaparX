@@ -18,4 +18,21 @@ router.post(
 	productController.createProduct
 );
 
+router.get('/', productController.getAllProducts);
+
+router.patch(
+	'/:id',
+	createAuthMiddleware(['seller']),
+	upload.array('images', 5),
+	productController.updateProduct
+);
+
+router.delete(
+	'/:id',
+	createAuthMiddleware(['seller','admin']),
+	productController.deleteProduct
+);
+
+router.get('/seller', createAuthMiddleware(['seller','admin']), productController.getProductBySeller);
+router.get('/:id', productController.getProductById);
 module.exports = router;
