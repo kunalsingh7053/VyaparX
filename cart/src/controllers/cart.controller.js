@@ -30,20 +30,21 @@ async function addItemToCart(req,res){
 
 async function getCart(req, res) {
     // If user is available (from auth), try fetching user's cart; else return empty cart
-    const user = req.user;
-    let items = [];
-    if (user) {
-        const cart = await cartModel.findOne({ user: user.id });
-        if (cart) {
-            items = cart.items.map((i) => ({
-                productId: i.productId,
-                qty: i.qty,
-                // price would be recomputed from Product Service in a real scenario
-            })); 
-        }
-    }
-    const totals = { subtotal: items.reduce((sum, i) => sum + Number(i.qty || 0), 0) };
-    return res.status(200).json({ items, totals });
+   const user = req.user;
+   let cart = await cartModel.findOne({ user: user.id });
+   if (!cart) {
+cart = new cartModel({ user: user.id, items: [] });
+await cart.save();
+
+   }
+   const tQuantity = cart.items.length;
+   res.status(200).json({
+    cart,
+    totals: {
+        totalItems: cart.items.reduce((sum, item) => sum + Number(item.qty || 0), 0),
+        totalQuantity:tQuantity
+    },
+   })
 }
 
 async function removeCartItem(req, res) {

@@ -9,12 +9,13 @@ async function createProduct(req, res) {
       description,
       priceAmount,
       priceCurrency,
-      category
+      category,
+      stock,
     } = req.body;
 
     const seller = req.user.id;
 
-    if (!title || !priceAmount || !priceCurrency || !seller || !category) {
+    if (!title || !priceAmount || !priceCurrency || !seller || !category || stock === undefined) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -23,17 +24,19 @@ async function createProduct(req, res) {
       images = await uploadMultipleImages(req.files);
     }
 
-    const product = await Product.create({
-      title,
-      description,
-      price: {
-        amount: priceAmount,
-        currency: priceCurrency,
-      },
-      seller,
-      category,
-      images,
-    });
+   const product = await Product.create({
+  title,
+  description,
+  price: {
+    amount: Number(priceAmount),
+    currency: priceCurrency,
+  },
+  seller,
+  category,
+  stock: Number(stock),   // 👈 FIX
+  images,
+});
+
 
     res.status(201).json({ product });
   } catch (err) {
@@ -96,19 +99,19 @@ async function updateProduct(req, res) {
     return res.status(404).json({ error: 'Product not found' });
   }
 
-  const allow = ['title', 'description', 'priceAmount', 'priceCurrency', 'category'];
+  const allow = ['title', 'description', 'priceAmount', 'priceCurrency', 'category', 'stock'];
   const updates = {};
   for (const key of allow) {
     if (req.body[key] !== undefined) {
       if (key === 'priceAmount') {
-        updates['price.amount'] = Number(req.body[key]);
+        updates['price.amount'] = req.body[key];
       } else if (key === 'priceCurrency') {
         updates['price.currency'] = req.body[key];
       } else {
         updates[key] = req.body[key];
       }
-    }
   }
+}
 
   // Apply dot-notation updates to the document
   product.set(updates);
