@@ -15,7 +15,7 @@ jest.mock('../src/models/order.model', () => ({
 const request = require('supertest');
 const app = require('../src/app');
 
-describe('POST /api/orders/:orderId/address', () => {
+describe('PATCH /api/orders/:orderId/address', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -43,7 +43,7 @@ describe('POST /api/orders/:orderId/address', () => {
     mockFindOne.mockResolvedValue(order);
 
     const res = await request(app)
-      .post('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
+      .patch('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
       .set('Authorization', 'Bearer fake.jwt.token')
       .send({ shippingAddress: newAddress });
 
@@ -56,7 +56,7 @@ describe('POST /api/orders/:orderId/address', () => {
 
   it('returns 400 for invalid orderId', async () => {
     const res = await request(app)
-      .post('/api/orders/not-a-valid-id/address')
+      .patch('/api/orders/not-a-valid-id/address')
       .set('Authorization', 'Bearer fake.jwt.token')
       .send({ shippingAddress: newAddress });
 
@@ -67,7 +67,7 @@ describe('POST /api/orders/:orderId/address', () => {
 
   it('returns 400 for invalid shipping address payload', async () => {
     const res = await request(app)
-      .post('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
+      .patch('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
       .set('Authorization', 'Bearer fake.jwt.token')
       .send({ shippingAddress: { street: 'X', city: 'Y' } }); // missing fields
 
@@ -79,7 +79,7 @@ describe('POST /api/orders/:orderId/address', () => {
     mockFindOne.mockResolvedValue(null);
 
     const res = await request(app)
-      .post('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
+      .patch('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
       .set('Authorization', 'Bearer fake.jwt.token')
       .send({ shippingAddress: newAddress });
 
@@ -98,7 +98,7 @@ describe('POST /api/orders/:orderId/address', () => {
     mockFindOne.mockResolvedValue(order);
 
     const res = await request(app)
-      .post('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
+      .patch('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
       .set('Authorization', 'Bearer fake.jwt.token')
       .send({ shippingAddress: newAddress });
 
@@ -117,7 +117,7 @@ describe('POST /api/orders/:orderId/address', () => {
     mockFindOne.mockResolvedValue(order);
 
     const res = await request(app)
-      .post('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
+      .patch('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
       .set('Authorization', 'Bearer fake.jwt.token')
       .send({ shippingAddress: newAddress });
 
@@ -129,7 +129,7 @@ describe('POST /api/orders/:orderId/address', () => {
     mockFindOne.mockRejectedValue(new Error('boom'));
 
     const res = await request(app)
-      .post('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
+      .patch('/api/orders/64f1a2b3c4d5e6f7a8b9c100/address')
       .set('Authorization', 'Bearer fake.jwt.token')
       .send({ shippingAddress: newAddress });
 

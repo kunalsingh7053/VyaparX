@@ -8,5 +8,5 @@ router.post('/',createAuthMiddleware(['user']),orderValidation.createOrderValida
 router.get('/me',createAuthMiddleware(['user']),orderController.getMyOrders);
 router.get('/:orderId',createAuthMiddleware(['user']),orderController.getOrderById);
 router.post('/:orderId/cancel',createAuthMiddleware(['user']),orderController.cancelOrderById);
-router.post('/:orderId/address',createAuthMiddleware(['user']),orderController.updateOrderAddress);
-module.exports = router;
+router.patch('/:orderId/address',createAuthMiddleware(['user']),orderController.updateOrderAddress);
+module.exports = router; 
