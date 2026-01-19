@@ -46,6 +46,33 @@ respondValidationErrors
 
 ]
 
+const updateAddressValidation = [
+body('shippingAddress.street')
+    .optional()
+    .isString()
+    .withMessage('Street must be a string'),
+body('shippingAddress.city')
+    .optional()
+    .isString()
+    .withMessage('City must be a string'),
+body('shippingAddress.state')
+    .optional()
+    .isString()
+    .withMessage('State must be a string'),
+body('shippingAddress.pinCode')
+    .optional()
+    .isNumeric()
+    .withMessage('Zip code must be numeric'),
+body('shippingAddress.country')
+    .optional()
+    .isString()
+    .withMessage('Country must be a string'),
+respondValidationErrors               
+
+
+]
+
 module.exports = {
-    createOrderValidation
+    createOrderValidation,
+    updateAddressValidation
 }
