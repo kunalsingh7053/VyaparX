@@ -12,7 +12,7 @@ try {
     
     const isUserAlreadyExists = await userModel.findOne({
         $or:[
-            {username},
+            {username}, 
             {email}
         ]
     });

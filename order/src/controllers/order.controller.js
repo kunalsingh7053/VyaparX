@@ -121,7 +121,7 @@ try {
     if(!order){
         return res.status(404).json({message:'Order not found'});
     }
-    res.status(200).json({order});
+    res.status(200).json(order);
 } catch (error) {
     if (process.env.NODE_ENV !== 'test') {
         console.error('Error fetching order by ID:', error);
