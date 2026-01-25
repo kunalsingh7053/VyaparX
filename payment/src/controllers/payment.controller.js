@@ -1,8 +1,10 @@
+require('dotenv').config();
 const paymentModel = require('../models/payment.model');
 const axios = require('axios');
 
-require('dotenv').config();
 const Razorpay = require('razorpay');
+const publishToQueue = require('../broker/broker').publishToQueue;
+
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -66,10 +68,28 @@ async function verifyPayment(req, res) {
                 payment.status = 'completed';
             await payment.save();
 
+
+ await publishToQueue('PAYMENT_NOTIFICATION.PAYMENT_COMPLETED', {
+                orderId: razorpayOrderId,
+                email:req.user.email,
+                amount: payment.price.amount,
+                currency: payment.price.currency,
+                
+                
+ })
+
             return res.status(200).json({ message: 'Payment verified successfully', payment });
         
         
       } catch (error) {
+        await publishToQueue('PAYMENT_NOTIFICATION.PAYMENT_FAILED', {
+            email:req.user.email,
+            paymentId: razorpayPaymentId,
+            orderId: razorpayOrderId,
+         
+
+
+        })
         console.log('Error verifying payment:', error);
       }
 
