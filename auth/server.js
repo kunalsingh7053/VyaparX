@@ -1,8 +1,10 @@
 require('dotenv').config();
 const app = require('./src/app');
 const connectDB = require('./src/db/db');
+const { connectRabbitMQ} = require('./src/borker/broker');
 // Connect to the database
 connectDB();
+connectRabbitMQ();
 
 
 
