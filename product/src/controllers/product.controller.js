@@ -1,7 +1,7 @@
 const Product = require("../models/product.model");
 const { uploadMultipleImages } = require("../services/imagekit.service")
 const mongoose = require('mongoose');
-
+const {publishToQueue} = require("../broker/broker");
 async function createProduct(req, res) {
   try {
     const {
@@ -36,7 +36,8 @@ async function createProduct(req, res) {
   stock: Number(stock),   // 👈 FIX
   images,
 });
-
+ 
+await publishToQueue('PRODUCT_SELLER_DASHBOARD.PRODUCT_CREATED', product);
 
     res.status(201).json({ product });
   } catch (err) {

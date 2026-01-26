@@ -1,7 +1,7 @@
 const orderModel = require('../models/order.model');
 const axios = require('axios');
 const mongoose = require('mongoose');
-
+const {publishToQueue} = require('../broker/broker');
 
 
 async function createOrder(req, res) {
@@ -69,6 +69,8 @@ const product = products.find(p => p._id === item.productId);
    
           shippingAddress:req.body.shippingAddress,
         })
+
+        await publishToQueue('ORDER_SELLER_DASHBOARD.ORDER_CREATED', order)
         res.status(201).json({message:'Order Created Successfully', order});
 
     } catch (error) {

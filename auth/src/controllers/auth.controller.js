@@ -31,14 +31,15 @@ try {
         role:role || 'user'
     })
     
-   await publishToQueue('AUTH_NOTIFICATION_USER_CREATED',{
-
-id:user._id,
-email:user.email,
-username:user.username,
-fullName:user.fullName
-
-   })
+    await Promise.all([
+        publishToQueue('AUTH_NOTIFICATION_USER_CREATED', {
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            fullName: user.fullName
+        }),
+        publishToQueue('AUTH_SELLER_DASHBOARD.USER_CREATED', user)
+    ])
 
     const token = jwt.sign({
         id:user._id,
