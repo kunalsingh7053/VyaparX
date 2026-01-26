@@ -3,7 +3,7 @@ const paymentModel = require('../models/payment.model');
 const axios = require('axios');
 
 const Razorpay = require('razorpay');
-const publishToQueue = require('../broker/broker').publishToQueue;
+const {publishToQueue} = require('../broker/broker');
 
 
 const razorpay = new Razorpay({
@@ -39,6 +39,15 @@ price:{
 },
 
 
+})
+
+await publishToQueue('PAYMENT_SELLER_DASHBOARD.PAYMENT_CREATED', payment);
+await publishToQueue('PAYMENT_NOTIFICATION.PAYMENT_INITIATED',{
+    orderId: orderId,
+    email: req.user.email,
+    amount: price.amount,
+    currency: price.currency,
+    
 })
 return res.status(201).json({message:"payment initiated", payment });
 } catch (error) {
@@ -77,6 +86,9 @@ async function verifyPayment(req, res) {
                 
                 
  })
+ 
+ await publishToQueue('PAYMENT_SELLER_DASHBOARD.PAYMENT_UPDATE', payment);
+
 
             return res.status(200).json({ message: 'Payment verified successfully', payment });
         

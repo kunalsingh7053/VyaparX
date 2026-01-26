@@ -32,12 +32,21 @@ async function createProduct(req, res) {
     currency: priceCurrency,
   },
   seller,
-  category,
+  category, 
   stock: Number(stock),   // 👈 FIX
   images,
 });
  
 await publishToQueue('PRODUCT_SELLER_DASHBOARD.PRODUCT_CREATED', product);
+await publishToQueue('PRODUCT_NOTIFICATION_.PRODUCT_CREATED', {
+
+email: req.user.email,
+productTitle: product.title,
+fullName: req.user.fullName,
+productId: product._id,
+
+
+});
 
     res.status(201).json({ product });
   } catch (err) {

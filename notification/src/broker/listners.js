@@ -76,6 +76,22 @@ module.exports =  function (){
 
     sendEmail(data.email, "Welcome to Our Service", "Thank you for registering with us.", emailHTMLTemplate);
 
+    });
+
+
+consumeFromQueue("PAYMENT_NOTIFICATION.PAYMENT_INITIATED",async(data)=>{
+
+const emailHTMLTemplate = `
+     <h1>Payment Initiated</h1>
+      <p>Dear Customer, <strong>${data.email}</strong> </p>
+      <p>Amount:- ${data.currency + "" + data.amount}</p>
+      <p>Your payment process has been initiated successfully. We will notify you once the payment is completed.</p>
+
+     `
+await sendEmail(data.email, "Payment Initiated", "Your payment process has started.", emailHTMLTemplate);
+
+}) 
+
  consumeFromQueue("PAYMENT_NOTIFICATION.PAYMENT_COMPLETED",async(data)=>{
     
     const emailHTMLTemplate = `
@@ -86,8 +102,8 @@ module.exports =  function (){
 
     
     `
+    sendEmail(data.email, "Payment Successful", "Your payment has been processed successfully.", emailHTMLTemplate);
  })
- sendEmail(data.email, "Payment Successful", "Your payment has been processed successfully.", emailHTMLTemplate);
 
 
  consumeFromQueue("PAYMENT_NOTIFICATION.PAYMENT_FAILED",async(data)=>{
@@ -100,6 +116,18 @@ const emailHTMLTemplate = `
 
  sendEmail(data.email, "Payment Failed", "Your payment could not be processed.", emailHTMLTemplate);
  })
+
+
+ consumeFromQueue('PRODUCT_NOTIFICATION_.PRODUCT_CREATED',async(data)=>{
+const emailHTMLTemplate = `
+     <h1>New Product Created</h1>
+     <p>Dear <strong>${data.fullName.firstName + " " + (data.fullName.lastName || "")}</strong>,</p>
+     <p>Your product "<strong>${data.productTitle}</strong>" has been successfully created with Product ID: <strong>${data.productId}</strong>.</p>
+     <p>Thank you for using our platform to manage your products.</p>
+     `
+await sendEmail(data.email, "Product Created Successfully", "Your product has been created.", emailHTMLTemplate);
+
+
+ })
   
-});
 }
