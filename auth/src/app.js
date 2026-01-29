@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.get('/', (req, res) => {
-    res.send('Auth Service is running');
+    res.send('Auth Service is running on port 3000');
 });
 
 // Routes
