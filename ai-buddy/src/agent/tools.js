@@ -6,7 +6,7 @@ const searchProduct = tool(async ({ query, token }) => {
 
     console.log("searchProduct called with data:", { query, token })
 
-    const response = await axios.get(`http://localhost:3001/api/products?q=${query}`, {
+    const response = await axios.get(`http://vyaparx-alb-1576357157.ap-south-1.elb.amazonaws.com/api/products?q=${query}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -27,7 +27,7 @@ const searchProduct = tool(async ({ query, token }) => {
 const addProductToCart = tool(async ({ productId, qty = 1, token }) => {
 
 
-    const response = await axios.post(`http://localhost:3002/api/cart/items`, {
+    const response = await axios.post(`http://vyaparx-alb-1576357157.ap-south-1.elb.amazonaws.com/api/cart/items`, {
         productId,
         qty
     }, {

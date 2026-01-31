@@ -9,7 +9,7 @@ async function createOrder(req, res) {
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
     try {
         //fetch user cart from cart service
-        const cartResponse = await axios.get(`http://localhost:3002/api/cart/`,{
+        const cartResponse = await axios.get(`http://vyaparx-alb-1576357157.ap-south-1.elb.amazonaws.com/api/cart/`,{
             headers: {
 Authorization: `Bearer ${token}`
 
@@ -19,7 +19,7 @@ Authorization: `Bearer ${token}`
             
             async(item)=>{
                 console.log("Fetching product:", item.productId);
-                return (await axios.get(`http://localhost:3001/api/products/${item.productId}`,{
+                return (await axios.get(`http://vyaparx-alb-1576357157.ap-south-1.elb.amazonaws.com/api/products/${item.productId}`,{
 
                     headers:{
 Authorization: `Bearer ${token}`
